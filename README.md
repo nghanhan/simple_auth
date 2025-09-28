@@ -1,88 +1,66 @@
-# 🍪 Cookie Authentication API
+# simple_auth
 
-## 📌 1. Giới thiệu
-Dự án minh họa cơ chế **xác thực bằng Cookie** trong Node.js + Express.  
-Bao gồm 3 API chính:
+## Cách chạy
+1. Install deps:
+```bash
+npm install
+```
 
-- `POST /login` → Đăng nhập & tạo cookie  
-- `GET /profile` → Truy cập trang bảo vệ (yêu cầu cookie)  
-- `POST /logout` → Đăng xuất & xóa cookie
+2. Khởi động MongoDB (local or docker).
 
+3. Start servers:
+```bash
+node basic_auth.js    # port 3000
+node cookie_auth.js   # port 3001
+```
+
+
+## Endpoints & How to test (POSTMAN)
+
+### Basic Auth
+#### non-secure ("/")
+GET `http://localhost:3000/`
+Expected: `Welcome! Visit first public resource.`
+![basic-non-secure](public/results/basic-non-secure.png)
+#### secure 
+GET `http://localhost:3000/secure`
+Authorization: Basic `admin:12345` → header:  
+```
+Authorization: Basic YWRtaW46MTIzNDU=
+```
+Expected: `You have accessed a protected resource 🎉`  
+![basic-secure](public/results/basic_secure.png)
+
+#### public 
+GET `http://localhost:3000/public`
+Expected: `Welcome! Visit second public resource.`
+![public](public/results/public.png)
 ---
 
-## 🧰 2. Cách chạy dự án
+### Cookie Auth
+#### login
+POST `http://localhost:3001/login`
+Body JSON:
+```json
+{ "username": "admin", "password": "12345" }
+```
+Expected: `Logged in!`  
+![login](public/results/login.png)
+![set_cookie](public/results/set_cookie.png)
+#### profile
+GET `http://localhost:3001/profile` (cookie must be present)  
+Expected: `Welcome user 1, your cookie is valid.`  
+![profile](public/results/profile.png)
 
-```bash
-# Cài đặt thư viện
-npm install
+#### logout
+POST `http://localhost:3001/logout` → cookie deleted.  
+Expected: `Logged out.`
+![logout](public/results/logout.png)
 
-# Khởi động server
-node cookie_auth.js
-Server mặc định chạy tại:
-👉 http://localhost:3001
+#### database mongo
+Cookie in DB:  
+![mongo_cookie](public/results/mongo_cookie.png)
 
-🧪 3. Kiểm thử với Postman
-Tất cả ảnh chụp kết quả test được lưu tại thư mục:
-public/results
 
-Và được đính kèm bên dưới từng phần.
 
-🔑 3.1. Đăng nhập (POST /login)
-URL:
 
-bash
-Copy code
-http://localhost:3001/login
-Method:
-
-nginx
-Copy code
-POST
-Body (JSON):
-
-json
-Copy code
-{
-  "username": "admin",
-  "password": "12345"
-}
-📸 Kết quả thành công:
-
-📸 Kết quả sai tài khoản:
-
-🧍 3.2. Truy cập trang bảo vệ (GET /profile)
-Khi đã đăng nhập (cookie hợp lệ):
-
-Khi chưa đăng nhập hoặc cookie hết hạn:
-
-🚪 3.3. Đăng xuất (POST /logout)
-URL:
-
-bash
-Copy code
-http://localhost:3001/logout
-Method:
-
-nginx
-Copy code
-POST
-📸 Kết quả:
-
-📝 4. Ghi chú
-Cookie có thời gian sống 5 phút (maxAge = 5 * 60 * 1000 ms).
-
-Sau khi cookie hết hạn → cần đăng nhập lại để truy cập /profile.
-
-Nếu thay đổi cổng server → nhớ chỉnh lại URL trong Postman.
-
-👩‍🎓 5. Thông tin sinh viên
-Họ tên: Nguyễn Hồng Ngọc Hân
-
-MSSV: 22660931
-
-Môn: Lập trình Hướng Dịch vụ
-
-Tuần: 06
-
-less
-Copy code
