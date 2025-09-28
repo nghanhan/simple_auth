@@ -33,7 +33,9 @@ Expected: `You have accessed a protected resource 🎉`
 
 #### 3. public 
 GET `http://localhost:3000/public`
+
 Expected: `Welcome! Visit second public resource.`
+
 ![public](public/results/public.png)
 ---
 
